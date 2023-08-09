@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const fs = require('fs');
+const {viewAllDepartments} = require('./lib/querys')
 
 require('dotenv').config();
 const questions = [
@@ -20,6 +21,7 @@ inquirer.prompt(questions)
 function handleResponse(data){
     if(data.introQuestions ==="View All departments"){
         console.log("View All departments chosen")
+        viewAllDepartments();
     }
     if(data.introQuestions ==="View all roles"){
         console.log("View all roles chosen")
@@ -80,7 +82,7 @@ async function init(){
 }catch (error) {
         console.error('Error executing SQL files:', error);
 }finally {
-    askQuestions(); // Call askQuestions() after initialization is complete
+    askQuestions();
 }
 }
 
