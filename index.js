@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const fs = require('fs');
-const {viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment} = require('./lib/querys')
+const {viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole} = require('./lib/querys')
 
 require('dotenv').config();
 const questions = [
