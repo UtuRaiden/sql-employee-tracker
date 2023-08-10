@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const fs = require('fs');
-const {viewAllDepartments} = require('./lib/querys')
+const {viewAllDepartments, viewAllRoles} = require('./lib/querys')
 
 require('dotenv').config();
 const questions = [
@@ -18,13 +18,15 @@ inquirer.prompt(questions)
 .then((data)=>{handleResponse(data)})
 }
 
-function handleResponse(data){
+async function handleResponse(data){
     if(data.introQuestions ==="View All departments"){
-        console.log("View All departments chosen")
-        viewAllDepartments();
+        await viewAllDepartments();
+        askQuestions();
     }
     if(data.introQuestions ==="View all roles"){
         console.log("View all roles chosen")
+        await viewAllRoles();
+        askQuestions();
     }
     if(data.introQuestions ==="View all employees"){
         console.log("View all employees chosen")
@@ -43,6 +45,7 @@ function handleResponse(data){
     }
     if(data.introQuestions ==="Exit"){
         console.log("Exit chosen")
+        process.exit();
     }
 }
 
