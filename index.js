@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const fs = require('fs');
-const {viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole} = require('./lib/querys')
+const {viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee} = require('./lib/querys')
 
 require('dotenv').config();
 const questions = [
@@ -33,15 +33,19 @@ async function handleResponse(data){
     }
     if(data.introQuestions ==="Add a department"){
         await addDepartment();
+        await viewAllDepartments();
         askQuestions();
     }
     if(data.introQuestions ==="Add a role"){
-        console.log("Add a role chosen")
         await addRole();
+        await viewAllRoles();
         askQuestions();
     }
     if(data.introQuestions ==="Add an employee"){
         console.log("Add an employee chosen")
+        await addEmployee();
+        await viewAllEmployees();
+        askQuestions();
     }
     if(data.introQuestions ==="Update Employee role"){
         console.log("Update Employee role chosen")
