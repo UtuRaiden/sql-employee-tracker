@@ -1,9 +1,11 @@
+// require all the necessary elements for the file
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const fs = require('fs');
 const {viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployee} = require('./lib/querys')
 
 require('dotenv').config();
+// defines the base questions for the intro page
 const questions = [
     {
         type:'list',
@@ -12,12 +14,12 @@ const questions = [
         name:'introQuestions'
     }
 ]
-
+// function that asks the intro questions. That is the only thing it does so im able to call it over and over again
 function askQuestions(){
 inquirer.prompt(questions)
 .then((data)=>{handleResponse(data)})
 }
-
+// function that takes the response of the questions and then calls another function to execute whatever was selected
 async function handleResponse(data){
     if(data.introQuestions ==="View All departments"){
         await viewAllDepartments();
@@ -56,7 +58,8 @@ async function handleResponse(data){
         process.exit();
     }
 }
-
+// Initialize function it creates the database if it doesn't exist
+// It also runs the schema and the seeds from the DB folder automatically so no interaction is needed from the user
 async function init(){
   const db = mysql.createConnection(
     {
@@ -66,11 +69,11 @@ async function init(){
         database: 'employee_db',
     });
     try {
-        // Create the database if it doesn't exist
+
         await db.promise().query('CREATE DATABASE IF NOT EXISTS employee_db');
         await db.promise().query('USE employee_db');
 
-        // Read and execute schema.sql file
+        // Reads and executes the schema file by splitting the the statements from a ;
         const schemaSQL = fs.readFileSync(__dirname + '/db/schema.sql', 'utf8');
         const schemaStatements = schemaSQL.split(';');
         for (const statement of schemaStatements) {
@@ -79,7 +82,7 @@ async function init(){
             }
         }
 
-        // Read and execute seeds.sql file
+      // Reads and executes the seeds file by splitting the the statements from a ;
         const seedsSQL = fs.readFileSync(__dirname + '/db/seeds.sql', 'utf8');
         const seedsStatements = seedsSQL.split(';');
         for (const statement of seedsStatements) {
@@ -92,9 +95,10 @@ async function init(){
 
 }catch (error) {
         console.error('Error executing SQL files:', error);
+// finally makes sure that everything else has been run first and then it calls the askQuestions function
 }finally {
     askQuestions();
 }
 }
-
+//calls the init function
 init();
